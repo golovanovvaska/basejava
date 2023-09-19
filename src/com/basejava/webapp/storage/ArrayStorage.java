@@ -10,6 +10,11 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
+    protected void copyResume(int index) {
+        storage[index] = storage[countResumes - 1];
+    }
+
+    @Override
     protected int getIndex(String uuid) {
         for (int i = 0; i < countResumes; i++) {
             if (storage[i].getUuid().equals(uuid)) {

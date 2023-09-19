@@ -14,6 +14,11 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
+    protected void copyResume(int index) {
+        System.arraycopy(storage, index + 1, storage, index, countResumes - index - 1);
+    }
+
+    @Override
     protected int getIndex(String uuid) {
         Resume resume = new Resume();
         resume.setUuid(uuid);
