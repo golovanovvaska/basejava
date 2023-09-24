@@ -3,6 +3,7 @@ package com.basejava.webapp;
 
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.storage.SortedArrayStorage;
+import com.basejava.webapp.storage.Storage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.io.InputStreamReader;
  * (just run, no need to understand)
  */
 public class MainArray {
-    private final static SortedArrayStorage ARRAY_STORAGE = new SortedArrayStorage();
+    private final static Storage ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -33,8 +34,7 @@ public class MainArray {
                 case "list" -> printAll();
                 case "size" -> System.out.println(ARRAY_STORAGE.size());
                 case "save" -> {
-                    r = new Resume();
-                    r.setUuid(uuid);
+                    r = new Resume(uuid);
                     ARRAY_STORAGE.save(r);
                     printAll();
                 }

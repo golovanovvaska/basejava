@@ -1,5 +1,8 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.exception.ExistStorageException;
+import com.basejava.webapp.exception.NotExistStorageException;
+import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -15,22 +18,22 @@ public abstract class AbstractArrayStorage implements Storage {
         countResumes = 0;
     }
 
-    public void update(Resume resume) {
+    public final void update(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index >= 0) {
             storage[index] = resume;
             System.out.println("Резюме " + resume.getUuid() + " обновлено");
         } else {
-            System.out.println("Резюме " + resume.getUuid() + " нет в storage");
+            throw new NotExistStorageException(resume.getUuid());
         }
     }
 
-    public void save(Resume resume) {
+    public final void save(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (countResumes >= CAPACITY) {
-            System.out.println("storage полон");
+            throw new StorageException("storage полон", resume.getUuid());
         } else if (index >= 0) {
-            System.out.println("Резюме " + resume.getUuid() + " уже есть в storage");
+            throw new ExistStorageException(resume.getUuid());
         } else {
             insertResume(resume, index);
             countResumes++;
@@ -38,16 +41,15 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public Resume get(String uuid) {
+    public final Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index >= 0) {
             return storage[index];
         }
-        System.out.println("Резюме " + uuid + " нет в storage");
-        return null;
+        throw new NotExistStorageException(uuid);
     }
 
-    public void delete(String uuid) {
+    public final void delete(String uuid) {
         int index = getIndex(uuid);
         if (index >= 0) {
             copyResume(index);
@@ -55,7 +57,7 @@ public abstract class AbstractArrayStorage implements Storage {
             countResumes--;
             System.out.println("Резюме " + uuid + " удалено");
         } else {
-            System.out.println("Резюме " + uuid + " нет в storage");
+            throw new NotExistStorageException(uuid);
         }
     }
 
