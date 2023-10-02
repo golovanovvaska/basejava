@@ -86,8 +86,8 @@ abstract class AbstractArrayStorageTest {
         assertSize(3);
     }
 
-    @Test ()
-    void StorageOverflow() {
+    @Test()
+    void storageOverflow() {
         storage.clear();
         int storageCapacity = AbstractArrayStorage.CAPACITY;
         try {
@@ -98,11 +98,10 @@ abstract class AbstractArrayStorageTest {
         } catch (StorageException e) {
             fail("storage overflow");
         }
-        StorageException exception = assertThrows(StorageException.class, () -> {
+        assertThrows(StorageException.class, () -> {
             Resume r = new Resume();
             storage.save(r);
         });
-        assertNotNull(exception);
     }
 
     @Test
