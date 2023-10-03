@@ -6,35 +6,30 @@ import com.basejava.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected final static int CAPACITY = 10_000;
-    protected final Resume[] storage = new Resume[CAPACITY];
-    protected int countResumes;
-
     public void clear() {
         clearStorage();
     }
 
     public void update(Resume resume) {
         Object searchKey = getExistingSearchKey(resume.getUuid());
-        updateResume(searchKey, resume);
+        doUpdate(searchKey, resume);
         System.out.println("Резюме " + resume.getUuid() + " обновлено");
     }
 
     public void save(Resume resume) {
         Object searchKey = getNotExistingSearchKey(resume.getUuid());
-        insertResume(resume, searchKey);
-        countResumes++;
+        doSave(resume, searchKey);
         System.out.println("Резюме " + resume.getUuid() + " добавлено в storage");
     }
 
     public Resume get(String uuid) {
         Object searchKey = getExistingSearchKey(uuid);
-        return getResume(searchKey);
+        return doGet(searchKey);
     }
 
     public final void delete(String uuid) {
         Object searchKey = getExistingSearchKey(uuid);
-        removeResume(searchKey);
+        doDelete(searchKey);
         System.out.println("Резюме " + uuid + " удалено");
     }
 
@@ -66,13 +61,13 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void clearStorage();
 
-    protected abstract void updateResume(Object searchKey, Resume resume);
+    protected abstract void doUpdate(Object searchKey, Resume resume);
 
-    protected abstract Resume getResume(Object searchKey);
+    protected abstract Resume doGet(Object searchKey);
 
-    protected abstract void insertResume(Resume resume, Object searchKey);
+    protected abstract void doSave(Resume resume, Object searchKey);
 
-    protected abstract void removeResume(Object searchKey);
+    protected abstract void doDelete(Object searchKey);
 
     protected abstract Resume[] getAllStorage();
 
