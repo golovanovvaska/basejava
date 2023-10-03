@@ -2,10 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-
-import java.util.Arrays;
 
 public abstract class AbstractStorage implements Storage {
 
@@ -18,63 +15,66 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            updateResume(index, resume);
-            System.out.println("Резюме " + resume.getUuid() + " обновлено");
-        } else {
-            throw new NotExistStorageException(resume.getUuid());
-        }
+        Object searchKey = getExistingSearchKey(resume.getUuid());
+        updateResume(searchKey, resume);
+        System.out.println("Резюме " + resume.getUuid() + " обновлено");
     }
 
     public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (countResumes >= CAPACITY) {
-            throw new StorageException("storage полон", resume.getUuid());
-        } else if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            insertResume(resume, index);
-            countResumes++;
-            System.out.println("Резюме " + resume.getUuid() + " добавлено в storage");
-        }
+        Object searchKey = getNotExistingSearchKey(resume.getUuid());
+        insertResume(resume, searchKey);
+        countResumes++;
+        System.out.println("Резюме " + resume.getUuid() + " добавлено в storage");
     }
 
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            return getResume(index);
-        }
-        throw new NotExistStorageException(uuid);
+        Object searchKey = getExistingSearchKey(uuid);
+        return getResume(searchKey);
     }
 
     public final void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            removeResume(index);
-            System.out.println("Резюме " + uuid + " удалено");
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+        Object searchKey = getExistingSearchKey(uuid);
+        removeResume(searchKey);
+        System.out.println("Резюме " + uuid + " удалено");
     }
 
     public Resume[] getAll() {
-        return Arrays.copyOf(storage, countResumes);
+        return getAllStorage();
     }
 
     public int size() {
-        return countResumes;
+        return getStorageSize();
     }
 
-    protected abstract int getIndex(String uuid);
+    private Object getExistingSearchKey(String uuid) {
+        if (!isExist(uuid)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return getSearchKey(uuid);
+    }
+
+    private Object getNotExistingSearchKey(String uuid) {
+        if (isExist(uuid)) {
+            throw new ExistStorageException(uuid);
+        }
+        return getSearchKey(uuid);
+    }
+
+    protected abstract boolean isExist(String uuid);
+
+    protected abstract Object getSearchKey(String uuid);
 
     protected abstract void clearStorage();
 
-    protected abstract void updateResume(int index, Resume resume);
+    protected abstract void updateResume(Object searchKey, Resume resume);
 
-    protected abstract Resume getResume(int index);
+    protected abstract Resume getResume(Object searchKey);
 
-    protected abstract void insertResume(Resume resume, int index);
+    protected abstract void insertResume(Resume resume, Object searchKey);
 
-    protected abstract void removeResume(int index);
+    protected abstract void removeResume(Object searchKey);
+
+    protected abstract Resume[] getAllStorage();
+
+    protected abstract int getStorageSize();
 }

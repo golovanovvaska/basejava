@@ -13,20 +13,34 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateResume(int index, Resume resume) {
-        storage[index] = resume;
+    protected void updateResume(Object searchKey, Resume resume) {
+        storage[(int) searchKey] = resume;
     }
 
     @Override
-    protected Resume getResume(int index) {
-        return storage[index];
+    protected Resume getResume(Object searchKey) {
+        return storage[(int) searchKey];
     }
 
     @Override
-    protected void removeResume(int index) {
-        copyResume(index);
+    protected void removeResume(Object searchKey) {
+        copyResume((int) searchKey);
         storage[countResumes - 1] = null;
         countResumes--;
+    }
+
+    @Override
+    protected Resume[] getAllStorage() {
+        return Arrays.copyOf(storage, countResumes);
+    }
+
+    @Override
+    protected boolean isExist(String uuid) {
+        return (int) getSearchKey(uuid) >= 0;
+    }
+
+    protected int getStorageSize() {
+        return countResumes;
     }
 
     protected abstract void copyResume(int index);
