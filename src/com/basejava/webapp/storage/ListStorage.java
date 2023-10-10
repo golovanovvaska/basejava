@@ -3,6 +3,7 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.model.Resume;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
 
@@ -44,8 +45,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume[] getAllStorage() {
-        return storage.toArray(new Resume[0]);
+    protected List<Resume> getAllStorage() {
+        return storage;
     }
 
     @Override
@@ -54,7 +55,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(String uuid) {
-        return getSearchKey(uuid) != null;
+    protected boolean isExist(Object uuid) {
+        return uuid != null;
     }
 }

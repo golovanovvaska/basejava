@@ -14,13 +14,13 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void copyResume(int index) {
+    protected void deleteResume(int index) {
         System.arraycopy(storage, index + 1, storage, index, countResumes - index - 1);
     }
 
     @Override
     protected Object getSearchKey(String uuid) {
-        Resume resume = new Resume(uuid);
+        Resume resume = new Resume(uuid, "qwerty");
         return Arrays.binarySearch(storage, 0, countResumes, resume);
     }
 }

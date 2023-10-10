@@ -2,11 +2,9 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
-public class MapStorage extends AbstractStorage {
+public class MapStorageUuid extends AbstractStorage {
 
     private final Map<String, Resume> storage = new HashMap<>();
 
@@ -41,9 +39,8 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume[] getAllStorage() {
-        Map<String, Resume> treeMap = new TreeMap<>(storage);
-        return treeMap.values().toArray(new Resume[0]);
+    protected List<Resume> getAllStorage() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override
@@ -52,7 +49,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(String uuid) {
-        return storage.containsKey(uuid);
+    protected boolean isExist(Object uuid) {
+        return storage.containsKey((String) uuid);
     }
 }
