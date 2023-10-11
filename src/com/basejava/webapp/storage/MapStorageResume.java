@@ -4,7 +4,7 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.*;
 
-public class MapStorageResume extends  AbstractStorage{
+public class MapStorageResume extends AbstractStorage {
 
     private final Map<String, Resume> storage = new HashMap<>();
 
@@ -50,12 +50,14 @@ public class MapStorageResume extends  AbstractStorage{
     }
 
     @Override
-    protected List<Resume> getAllStorage() {
-        return new ArrayList<>(storage.values());
+    protected int getStorageSize() {
+        return storage.size();
     }
 
     @Override
-    protected int getStorageSize() {
-        return storage.size();
+    protected List<Resume> getSorted() {
+        List<Resume> list = new ArrayList<>(storage.values());
+        list.sort(RESUME_COMPARATOR);
+        return list;
     }
 }

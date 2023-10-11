@@ -8,6 +8,9 @@ import java.util.*;
 
 public abstract class AbstractStorage implements Storage {
 
+    protected final static Comparator<Resume> RESUME_COMPARATOR =
+            Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid);
+
     public void clear() {
         clearStorage();
     }
@@ -36,16 +39,7 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public List<Resume> getAllSorted() {
-        List<Resume> list = getAllStorage();
-        List<Resume> storage = new ArrayList<>(list);
-        storage.sort((o1, o2) -> {
-            if (o1.getFullName().equals(o2.getFullName())) {
-                return o1.getUuid().compareTo(o2.getUuid());
-            }
-            return o1.getFullName().compareTo(o2.getFullName());
-
-        });
-        return storage;
+        return getSorted();
     }
 
     public int size() {
@@ -82,7 +76,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void doDelete(Object searchKey);
 
-    protected abstract List<Resume> getAllStorage();
-
     protected abstract int getStorageSize();
+
+    protected abstract List<Resume> getSorted();
 }

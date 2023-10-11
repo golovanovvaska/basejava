@@ -39,13 +39,15 @@ public class MapStorageUuid extends AbstractStorage {
     }
 
     @Override
-    protected List<Resume> getAllStorage() {
-        return new ArrayList<>(storage.values());
+    protected int getStorageSize() {
+        return storage.size();
     }
 
     @Override
-    protected int getStorageSize() {
-        return storage.size();
+    protected List<Resume> getSorted() {
+        List<Resume> list = new ArrayList<>(storage.values());
+        list.sort(RESUME_COMPARATOR);
+        return list;
     }
 
     @Override

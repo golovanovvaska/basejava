@@ -3,6 +3,7 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doSave(Resume resume, Object searchKey){
+    protected void doSave(Resume resume, Object searchKey) {
         try {
             insertResume(resume, searchKey);
             countResumes++;
@@ -46,8 +47,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected List<Resume> getAllStorage() {
-        return Arrays.stream(Arrays.copyOf(storage, countResumes)).toList();
+    protected List<Resume> getSorted() {
+        List<Resume> list = new ArrayList<>(Arrays.stream(Arrays.copyOf(storage, countResumes)).toList());
+        list.sort(RESUME_COMPARATOR);
+        return list;
     }
 
     @Override
