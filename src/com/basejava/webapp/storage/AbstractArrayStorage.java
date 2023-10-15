@@ -47,10 +47,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected List<Resume> getSorted() {
-        List<Resume> list = new ArrayList<>(Arrays.stream(Arrays.copyOf(storage, countResumes)).toList());
-        list.sort(RESUME_COMPARATOR);
-        return list;
+    protected List<Resume> getAll() {
+        return new ArrayList<>(Arrays.stream(Arrays.copyOf(storage, countResumes)).toList());
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.*;
 
-public class MapStorageUuid extends AbstractStorage {
+public class MapUuidStorage extends AbstractStorage {
 
     private final Map<String, Resume> storage = new HashMap<>();
 
@@ -44,10 +44,8 @@ public class MapStorageUuid extends AbstractStorage {
     }
 
     @Override
-    protected List<Resume> getSorted() {
-        List<Resume> list = new ArrayList<>(storage.values());
-        list.sort(RESUME_COMPARATOR);
-        return list;
+    protected List<Resume> getAll() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override

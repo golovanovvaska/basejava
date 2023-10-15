@@ -1,5 +1,7 @@
 package com.basejava.webapp.model;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -10,18 +12,43 @@ public class Resume implements Comparable<Resume> {
     // Unique identifier
     private final String uuid;
     private final String fullName;
+    private final Map<Contacts, Link> contacts;
+    private final Map<Sections, Section> sections;
 
-    public Resume() {
-        this(UUID.randomUUID().toString());
+    public Resume(String fullName, Map<Contacts, Link> contacts, Map<Sections, Section> sections) {
+        this.fullName = fullName;
+        this.contacts = new EnumMap<>(contacts);
+        this.sections = new EnumMap<>(sections);
+        this.uuid = UUID.randomUUID().toString();
     }
 
-    public Resume(String fullName) {
-        this(UUID.randomUUID().toString(), fullName);
+    public Resume() {
+        this.fullName = "fullName";
+        this.contacts = new EnumMap<>(Contacts.class);
+        this.sections = new EnumMap<>(Sections.class);
+        this.uuid = UUID.randomUUID().toString();
+    }
+
+    public Resume(String uuid) {
+        this.fullName = "fullName";
+        this.contacts = new EnumMap<>(Contacts.class);
+        this.sections = new EnumMap<>(Sections.class);
+        this.uuid = uuid;
     }
 
     public Resume(String uuid, String fullName) {
-        this.uuid = uuid;
         this.fullName = fullName;
+        this.contacts = new EnumMap<>(Contacts.class);
+        this.sections = new EnumMap<>(Sections.class);
+        this.uuid = uuid;
+    }
+
+    public Map<Contacts, Link> getContacts() {
+        return contacts;
+    }
+
+    public Map<Sections, Section> getSections() {
+        return sections;
     }
 
     public String getUuid() {

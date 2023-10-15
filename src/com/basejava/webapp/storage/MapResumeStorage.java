@@ -4,7 +4,7 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.*;
 
-public class MapStorageResume extends AbstractStorage {
+public class MapResumeStorage extends AbstractStorage {
 
     private final Map<String, Resume> storage = new HashMap<>();
 
@@ -40,13 +40,7 @@ public class MapStorageResume extends AbstractStorage {
 
     @Override
     protected void doDelete(Object resume) {
-        String key = null;
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            if (entry.getValue().equals(resume)) {
-                key = entry.getKey();
-            }
-        }
-        storage.remove(key);
+        storage.remove(((Resume) resume).getUuid());
     }
 
     @Override
@@ -55,9 +49,7 @@ public class MapStorageResume extends AbstractStorage {
     }
 
     @Override
-    protected List<Resume> getSorted() {
-        List<Resume> list = new ArrayList<>(storage.values());
-        list.sort(RESUME_COMPARATOR);
-        return list;
+    protected List<Resume> getAll() {
+        return new ArrayList<>(storage.values());
     }
 }
