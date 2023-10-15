@@ -33,9 +33,9 @@ public class ResumeTestData {
         Map<Sections, Section> sections = new EnumMap<>(Sections.class);
         try {
             System.out.println("Позиция");
-            sections.put(Sections.OBJECTIVE, new PersonalAndObjectiveSection(scanner.nextLine()));
+            sections.put(Sections.OBJECTIVE, new PersonalAndObjective(scanner.nextLine()));
             System.out.println("Личные качества");
-            sections.put(Sections.PERSONAL, new PersonalAndObjectiveSection(scanner.nextLine()));
+            sections.put(Sections.PERSONAL, new PersonalAndObjective(scanner.nextLine()));
             System.out.println("Достижения");
             sections.put(Sections.ACHIEVEMENT, fillAchievementAndQualification());
             System.out.println("Квалификация");
@@ -51,7 +51,7 @@ public class ResumeTestData {
     }
 
     private static Section fillAchievementAndQualification() {
-        AchievementAndQualificationSection o = new AchievementAndQualificationSection();
+        AchievementAndQualification o = new AchievementAndQualification();
         String answer;
         while (true) {
             o.addAchievementAndQualification(scanner.nextLine());

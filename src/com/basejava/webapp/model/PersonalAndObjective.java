@@ -1,10 +1,10 @@
 package com.basejava.webapp.model;
 
-public class PersonalAndObjectiveSection extends Section {
+public class PersonalAndObjective extends Section {
 
     private final String text;
 
-    public PersonalAndObjectiveSection(String text) {
+    public PersonalAndObjective(String text) {
         this.text = text;
     }
 
