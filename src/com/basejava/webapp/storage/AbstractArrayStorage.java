@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     protected final static int CAPACITY = 10_000;
     protected final Resume[] storage = new Resume[CAPACITY];
@@ -20,12 +20,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doUpdate(Object searchKey, Resume resume) {
-        storage[(int) searchKey] = resume;
+    protected void doUpdate(Integer searchKey, Resume resume) {
+        storage[searchKey] = resume;
     }
 
     @Override
-    protected void doSave(Resume resume, Object searchKey) {
+    protected void doSave(Resume resume, Integer searchKey) {
         try {
             insertResume(resume, searchKey);
             countResumes++;
@@ -35,13 +35,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume doGet(Object searchKey) {
-        return storage[(int) searchKey];
+    protected Resume doGet(Integer searchKey) {
+        return storage[searchKey];
     }
 
     @Override
-    protected void doDelete(Object searchKey) {
-        deleteResume((int) searchKey);
+    protected void doDelete(Integer searchKey) {
+        deleteResume(searchKey);
         storage[countResumes - 1] = null;
         countResumes--;
     }
@@ -52,8 +52,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object uuid) {
-        return (int) uuid >= 0;
+    protected boolean isExist(Integer uuid) {
+        return uuid >= 0;
     }
 
     @Override
@@ -63,5 +63,5 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected abstract void deleteResume(int index);
 
-    protected abstract void insertResume(Resume resume, Object searchKey);
+    protected abstract void insertResume(Resume resume, Integer searchKey);
 }

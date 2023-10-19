@@ -1,34 +1,67 @@
 package com.basejava.webapp.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Organization {
-    private final Link homePage;
+    private final String website;
     private final String organizationName;
-    private final String position;
-    private final String achievements;
-    private final Date startDate;
-    private final Date endDate;
+    private final List<Period> periods = new ArrayList<>();
 
-    public Organization(Link homePage, String organizationName, String position, String achievements,
-                        Date startDate, Date endDate) {
-        this.homePage = homePage;
+    public Organization(String website, String organizationName) {
+        this.website = website;
         this.organizationName = organizationName;
-        this.position = position;
-        this.achievements = achievements;
-        this.startDate = startDate;
-        this.endDate = endDate;
+    }
+
+    public void addPeriod(String title, String description, LocalDate startDate, LocalDate endDate) {
+        Period period = new Period(title, description, startDate, endDate);
+        periods.add(period);
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public List<Period> getPeriods() {
+        return periods;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Organization that = (Organization) o;
+
+        if (!Objects.equals(website, that.website)) return false;
+        if (!organizationName.equals(that.organizationName)) return false;
+        return periods.equals(that.periods);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = website != null ? website.hashCode() : 0;
+        result = 31 * result + organizationName.hashCode();
+        result = 31 * result + periods.hashCode();
+        return result;
     }
 
     @Override
     public String toString() {
-        return "Organization{" +
-                "homePage=" + homePage +
-                ", organizationName='" + organizationName + '\'' +
-                ", position='" + position + '\'' +
-                ", achievements='" + achievements + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                '}';
+        return "\n" + organizationName + "\n" + periodsToString();
+    }
+
+    private String periodsToString() {
+        StringBuilder str = new StringBuilder();
+        for (Period period : periods) {
+            str.append(period.toString());
+        }
+        return str.toString();
     }
 }
