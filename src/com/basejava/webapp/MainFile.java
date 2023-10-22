@@ -15,7 +15,7 @@ public class MainFile {
             throw new RuntimeException("Error", e);
         }
 
-        File dir = new File("./src/com/basejava/webapp");
+        File dir = new File("./");
         System.out.println(dir.isDirectory());
         String[] list = dir.list();
         if (list != null) {
