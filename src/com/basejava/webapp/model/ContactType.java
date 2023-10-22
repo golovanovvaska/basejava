@@ -1,6 +1,6 @@
 package com.basejava.webapp.model;
 
-public enum Contacts {
+public enum ContactType {
 
     PHONE_NUMBER("Тел.:"),
     SKYPE("Skype:"),
@@ -10,9 +10,9 @@ public enum Contacts {
     STACKOVERFLOW("Профиль StackOveflow"),
     HOMEPAGE("Домашняя страница");
 
-    private String contact;
+    private final String contact;
 
-    Contacts(String contact) {
+    ContactType(String contact) {
         this.contact = contact;
     }
 

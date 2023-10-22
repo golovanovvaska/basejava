@@ -3,47 +3,43 @@ package com.basejava.webapp;
 import com.basejava.webapp.model.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ResumeTestData {
 
-    public static void main(String[] args) {
-        Resume resume = new Resume("Григорий Кислин", fillContacts(), fillSections());
-        printResume(resume);
+    public static Resume createResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
+        fillContacts(resume);
+        fillSections(resume);
+        return resume;
     }
 
-    private static Map<Contacts, String> fillContacts() {
-        Map<Contacts, String> contacts = new HashMap<>();
-        contacts.put(Contacts.PHONE_NUMBER, "+7(921) 855-0482)");
-        contacts.put(Contacts.SKYPE, "skype:grigory.kislin");
-        contacts.put(Contacts.MAIL, "gkislin@yandex.ru");
-        contacts.put(Contacts.LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        contacts.put(Contacts.GITHUB, "https://github.com/gkislin");
-        contacts.put(Contacts.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
-        contacts.put(Contacts.HOMEPAGE, "http://gkislin.ru/");
-        return contacts;
+    private static void fillContacts(Resume resume) {
+        resume.addContact(ContactType.PHONE_NUMBER, "+7(921) 855-0482)");
+        resume.addContact(ContactType.SKYPE, "skype:grigory.kislin");
+        resume.addContact(ContactType.MAIL, "gkislin@yandex.ru");
+        resume.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        resume.addContact(ContactType.GITHUB, "https://github.com/gkislin");
+        resume.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
+        resume.addContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
     }
 
-    private static Map<Sections, Section> fillSections() {
-        Map<Sections, Section> sections = new HashMap<>();
-        fillTextSections(sections);
-        fillListSections(sections);
-        fillOrganizationSections(sections);
-        return sections;
+    private static void fillSections(Resume resume) {
+        fillTextSections(resume);
+        fillListSections(resume);
+        fillOrganizationSections(resume);
     }
 
-    private static void fillTextSections(Map<Sections, Section> sections) {
+    private static void fillTextSections(Resume resume) {
         TextSection objective = new TextSection("Ведущий стажировок и корпоративного обучения " +
                 "по Java Web и Enterprise технологиям");
-        sections.put(Sections.OBJECTIVE, objective);
+        resume.addSection(Sections.OBJECTIVE, objective);
 
         TextSection personal = new TextSection("Аналитический склад ума, сильная логика, креативность, " +
                 "инициативность. Пурист кода и архитектуры.");
-        sections.put(Sections.PERSONAL, personal);
+        resume.addSection(Sections.PERSONAL, personal);
     }
 
-    private static void fillListSections(Map<Sections, Section> sections) {
+    private static void fillListSections(Resume resume) {
         ListSection achievement = new ListSection();
         achievement.addText("Организация команды и успешная реализация Java проектов для сторонних заказчиков: " +
                 "приложения автопарк на стеке Spring Cloud/микросервисы, система мониторинга показателей спортсменов " +
@@ -55,7 +51,7 @@ public class ResumeTestData {
                 "Более 3500 выпускников.");
         achievement.addText("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike." +
                 " Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
-        sections.put(Sections.ACHIEVEMENT, achievement);
+        resume.addSection(Sections.ACHIEVEMENT, achievement);
 
         ListSection qualifications = new ListSection();
         qualifications.addText("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
@@ -64,10 +60,10 @@ public class ResumeTestData {
                 "SQLite, MS SQL, HSQLDB");
         qualifications.addText("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy");
         qualifications.addText("XML/XSD/XSLT, SQL, C/C++, Unix shell scripts");
-        sections.put(Sections.QUALIFICATIONS, qualifications);
+        resume.addSection(Sections.QUALIFICATIONS, qualifications);
     }
 
-    private static void fillOrganizationSections(Map<Sections, Section> sections) {
+    private static void fillOrganizationSections(Resume resume) {
         OrganizationSection experience = new OrganizationSection();
         Organization organization = new Organization("http://javaops.ru/", "Java Online Projects");
         organization.addPeriod("Автор проекта.", "Создание, организация и проведение Java онлайн" +
@@ -90,7 +86,7 @@ public class ResumeTestData {
                         "Unix shell remote scripting via ssh tunnels, PL/Python", LocalDate.of(2012, 4, 1),
                 LocalDate.of(2014, 10, 1));
         experience.addOrganization(organization);
-        sections.put(Sections.EXPERIENCE, experience);
+        resume.addSection(Sections.EXPERIENCE, experience);
 
         OrganizationSection education = new OrganizationSection();
         organization = new Organization("http://www.siemens.ru/", "Siemens AG");
@@ -108,28 +104,6 @@ public class ResumeTestData {
         organization.addPeriod("", "Инженер (программист Fortran, C)",
                 LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1));
         education.addOrganization(organization);
-        sections.put(Sections.EDUCATION, education);
-    }
-
-    private static void printResume(Resume resume) {
-        System.out.println(resume.getFullName());
-        printContacts(resume);
-        printSections(resume);
-    }
-
-    private static void printContacts(Resume resume) {
-        Map<Contacts, String> contacts = resume.getContacts();
-        System.out.println();
-        for (Contacts contact : contacts.keySet()) {
-            System.out.println(contact.getContact() + ": " + contacts.get(contact));
-        }
-    }
-
-    private static void printSections(Resume resume) {
-        Map<Sections, Section> sections = resume.getSections();
-        for (Sections section : sections.keySet()) {
-            System.out.println("\n" + section.getSection());
-            System.out.println(sections.get(section));
-        }
+        resume.addSection(Sections.EDUCATION, education);
     }
 }

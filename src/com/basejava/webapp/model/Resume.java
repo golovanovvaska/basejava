@@ -1,7 +1,6 @@
 package com.basejava.webapp.model;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -13,43 +12,38 @@ public class Resume implements Comparable<Resume> {
     // Unique identifier
     private final String uuid;
     private final String fullName;
-    private final Map<Contacts, String> contacts;
-    private final Map<Sections, Section> sections;
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<Sections, Section> sections = new EnumMap<>(Sections.class);
 
-    public Resume(String fullName, Map<Contacts, String> contacts, Map<Sections, Section> sections) {
+    public Resume(String fullName) {
         this.fullName = fullName;
-        this.contacts = new EnumMap<>(contacts);
-        this.sections = new EnumMap<>(sections);
         this.uuid = UUID.randomUUID().toString();
     }
 
     public Resume() {
         this.fullName = "fullName";
-        this.contacts = new HashMap<>();
-        this.sections = new EnumMap<>(Sections.class);
         this.uuid = UUID.randomUUID().toString();
-    }
-
-    public Resume(String uuid) {
-        this.fullName = "fullName";
-        this.contacts = new HashMap<>();
-        this.sections = new EnumMap<>(Sections.class);
-        this.uuid = uuid;
     }
 
     public Resume(String uuid, String fullName) {
         this.fullName = fullName;
-        this.contacts = new HashMap<>();
-        this.sections = new EnumMap<>(Sections.class);
         this.uuid = uuid;
     }
 
-    public Map<Contacts, String> getContacts() {
+    public Map<ContactType, String> getContacts() {
         return contacts;
     }
 
     public Map<Sections, Section> getSections() {
         return sections;
+    }
+
+    public void addContact(ContactType contactType, String contact) {
+        contacts.put(contactType, contact);
+    }
+
+    public void addSection(Sections sectionType, Section section ) {
+        sections.put(sectionType, section);
     }
 
     public String getUuid() {
