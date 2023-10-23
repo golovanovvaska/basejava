@@ -36,10 +36,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void clearStorage() {
-        if (directory.listFiles() == null) {
+        File[] files = directory.listFiles();
+        if (files == null) {
             throw  new StorageException(directory.getAbsolutePath() + "is empty","");
         }
-        for (File file : directory.listFiles()) {
+        for (File file : files) {
             doDelete(file);
         }
     }
@@ -74,28 +75,27 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File file) {
-        try {
-            file.delete();
-        } catch (RuntimeException e) {
+        if (!file.delete())
             throw new StorageException("Deletion Error", file.getName());
-        }
     }
 
     @Override
     protected int getStorageSize() {
-        if (directory.listFiles() == null) {
+        File[] files = directory.listFiles();
+        if (files == null) {
             throw  new StorageException(directory.getAbsolutePath() + "is empty","");
         }
-        return directory.listFiles().length;
+        return files.length;
     }
 
     @Override
     protected List<Resume> getAll() {
-        if (directory.listFiles() == null) {
+        File[] files = directory.listFiles();
+        if (files == null) {
             throw  new StorageException(directory.getAbsolutePath() + "is empty","");
         }
         List<Resume> resumes = new ArrayList<>();
-        for (File file : directory.listFiles()) {
+        for (File file : files) {
             resumes.add(doGet(file));
         }
         return resumes;
