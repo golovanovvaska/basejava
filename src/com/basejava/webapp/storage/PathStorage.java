@@ -2,9 +2,11 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.storage.strategies.StreamStrategy;
+import com.basejava.webapp.storage.strategies.Strategy;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,9 +17,9 @@ import java.util.stream.Collectors;
 public class PathStorage extends AbstractStorage<Path> {
 
     private final Path directory;
-    private final StreamStrategy strategy;
+    private final Strategy strategy;
 
-    protected PathStorage(String dir, StreamStrategy strategy) {
+    protected PathStorage(String dir, Strategy strategy) {
         this.strategy = strategy;
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
