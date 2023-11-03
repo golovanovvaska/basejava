@@ -2,6 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
+import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Comparator;
@@ -83,7 +84,7 @@ public abstract class AbstractStorage<T> implements Storage {
 
     protected abstract void doUpdate(T searchKey, Resume resume);
 
-    protected abstract Resume doGet(T searchKey);
+    protected abstract Resume doGet(T searchKey) throws StorageException;
 
     protected abstract void doSave(Resume resume, T searchKey);
 

@@ -30,18 +30,20 @@ public class MainFile {
             throw new RuntimeException(e);
         }
         System.out.println("--------------------------------------------------------------------");
-        printFileList(dir);
+        printFileList(dir, "");
     }
 
-    private static void printFileList(File dir) {
+    private static void printFileList(File dir, String indent) {
+        System.out.println(indent + dir.getName());
         String[] dirList = dir.list();
+        indent += " ";
         if (dirList != null) {
             for (String s : dirList) {
                 File f = new File(dir + "/" + s);
                 if (f.isDirectory()) {
-                    printFileList(f);
+                    printFileList(f, indent);
                 } else {
-                    System.out.println(f.getName());
+                    System.out.println(indent + f.getName());
                 }
             }
         }
