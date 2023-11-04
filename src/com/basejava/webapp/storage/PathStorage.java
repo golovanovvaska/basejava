@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
 
@@ -35,16 +36,12 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return Paths.get(directory + "/" + uuid);
+        return directory.resolve(uuid);
     }
 
     @Override
     protected void clearStorage() {
-        try {
-            Files.list(directory).forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null, e);
-        }
+        getFiles().forEach(this::doDelete);
     }
 
     @Override
@@ -69,10 +66,10 @@ public class PathStorage extends AbstractStorage<Path> {
     protected void doSave(Resume resume, Path path) {
         try {
             Files.createFile(path);
-            doUpdate(path, resume);
         } catch (IOException e) {
             throw new StorageException("IO Error", path.getFileName().toString(), e);
         }
+        doUpdate(path, resume);
     }
 
     @Override
@@ -87,17 +84,17 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected int getStorageSize() {
-        try {
-            return (int) Files.list(directory).count();
-        } catch (IOException e) {
-            throw new StorageException("Directory Error", e);
-        }
+        return (int) getFiles().count();
     }
 
     @Override
     protected List<Resume> getAll() {
+        return getFiles().map(this::doGet).collect(Collectors.toList());
+    }
+
+    private Stream<Path> getFiles() {
         try {
-            return Files.list(directory).map(this::doGet).collect(Collectors.toList());
+            return Files.list(directory);
         } catch (IOException e) {
             throw new StorageException("Directory Error", e);
         }

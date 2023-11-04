@@ -39,10 +39,7 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected void clearStorage() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException(directory.getAbsolutePath() + "is empty", "");
-        }
+        File[] files = getFiles();
         for (File file : files) {
             doDelete(file);
         }
@@ -70,10 +67,10 @@ public class FileStorage extends AbstractStorage<File> {
     protected void doSave(Resume resume, File file) {
         try {
             file.createNewFile();
-            doUpdate(file, resume);
         } catch (IOException e) {
             throw new StorageException("IO Error", file.getName(), e);
         }
+        doUpdate(file, resume);
     }
 
     @Override
@@ -84,23 +81,25 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected int getStorageSize() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException(directory.getAbsolutePath() + "is empty", "");
-        }
+        File[] files = getFiles();
         return files.length;
     }
 
     @Override
     protected List<Resume> getAll() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException(directory.getAbsolutePath() + "is empty", "");
-        }
+        File[] files = getFiles();
         List<Resume> resumes = new ArrayList<>();
         for (File file : files) {
             resumes.add(doGet(file));
         }
         return resumes;
+    }
+
+    private File[] getFiles() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException(directory.getAbsolutePath() + "is empty", "");
+        }
+        return files;
     }
 }
