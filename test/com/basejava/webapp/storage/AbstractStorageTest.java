@@ -112,14 +112,14 @@ public abstract class AbstractStorageTest {
         int storageCapacity = AbstractArrayStorage.CAPACITY;
         try {
             for (int i = 0; i < storageCapacity; i++) {
-                Resume r = new Resume();
+                Resume r = new Resume("fullName");
                 storage.save(r);
             }
         } catch (StorageException e) {
             fail("storage overflow");
         }
         assertThrows(StorageException.class, () -> {
-            Resume r = new Resume();
+            Resume r = new Resume("fullName");
             storage.save(r);
         });
     }

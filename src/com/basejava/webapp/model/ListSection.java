@@ -1,17 +1,26 @@
 package com.basejava.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serial;
-import java.util.ArrayList;
 import java.util.List;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ListSection extends Section {
     @Serial
     private final static long serialVersionUID = 1L;
 
-    private final List<String> list = new ArrayList<>();
+    private List<String> list;
 
-    public void addText(String text) {
-        this.list.add(text);
+    public ListSection() {
+    }
+
+    public ListSection(List<String> list) {
+        this.list = list;
+    }
+
+    public void setList(List<String> list) {
+        this.list = list;
     }
 
     public List<String> getList() {
@@ -37,7 +46,7 @@ public class ListSection extends Section {
     public String toString() {
         StringBuilder str = new StringBuilder();
         for (String text : list) {
-            str.append("* ").append(text).append("\n");
+            str.append(text);
         }
         return str.toString();
     }

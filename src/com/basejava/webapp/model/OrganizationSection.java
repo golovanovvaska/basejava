@@ -1,17 +1,26 @@
 package com.basejava.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serial;
-import java.util.ArrayList;
 import java.util.List;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OrganizationSection extends Section {
     @Serial
     private final static long serialVersionUID = 1L;
 
-    private final List<Organization> list = new ArrayList<>();
+    private List<Organization> list;
 
-    public void addOrganization(Organization organization) {
-        this.list.add(organization);
+    public OrganizationSection() {
+    }
+
+    public OrganizationSection(List<Organization> list) {
+        this.list = list;
+    }
+
+    public void setList(List<Organization> list) {
+        this.list = list;
     }
 
     public List<Organization> getList() {

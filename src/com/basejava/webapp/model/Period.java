@@ -1,21 +1,48 @@
 package com.basejava.webapp.model;
 
+import com.basejava.webapp.util.XmlLocalDateAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Period implements Serializable {
     @Serial
     private final static long serialVersionUID = 1L;
-    private final String title;
-    private final String description;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
+    private String title;
+    private String description;
+    @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
+    private LocalDate startDate;
+    @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
+    private LocalDate endDate;
 
     public Period(String title, String description, LocalDate startDate, LocalDate endDate) {
         this.title = title;
         this.description = description;
         this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public Period() {
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -59,6 +86,6 @@ public class Period implements Serializable {
 
     @Override
     public String toString() {
-        return startDate + " - " + endDate + (title.isEmpty() ? title:"\n" + title) + "\n"+ description + "\n";
+        return startDate + " - " + endDate + (title.isEmpty() ? title : "\n" + title) + "\n" + description + "\n";
     }
 }

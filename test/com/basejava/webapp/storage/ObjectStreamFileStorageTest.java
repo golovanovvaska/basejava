@@ -1,10 +1,10 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.storage.strategies.StreamStrategy;
+import com.basejava.webapp.storage.serializer.StreamSerializer;
 
 public class ObjectStreamFileStorageTest extends AbstractArrayStorageTest {
     public ObjectStreamFileStorageTest() {
-        super(new FileStorage(STORAGE_DIR, new StreamStrategy()) {
+        super(new FileStorage(STORAGE_DIR, new StreamSerializer()) {
         });
     }
 

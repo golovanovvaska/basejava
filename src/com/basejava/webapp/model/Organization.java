@@ -1,34 +1,46 @@
 package com.basejava.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     @Serial
     private final static long serialVersionUID = 1L;
-    private final String website;
-    private final String name;
-    private final List<Period> periods = new ArrayList<>();
+    private String website;
+    private String name;
+    private List<Period> periods;
 
-    public Organization(String website, String name) {
+    public Organization() {
+    }
+
+    public Organization(String website, String name, List<Period> periods) {
         this.website = website;
+        this.name = name;
+        this.periods = periods;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void addPeriod(String title, String description, LocalDate startDate, LocalDate endDate) {
-        Period period = new Period(title, description, startDate, endDate);
-        periods.add(period);
+    public void setPeriods(List<Period> periods) {
+        this.periods = periods;
     }
 
     public String getWebsite() {
         return website;
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
 

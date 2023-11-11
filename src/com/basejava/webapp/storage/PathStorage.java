@@ -2,7 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.storage.strategies.Strategy;
+import com.basejava.webapp.storage.serializer.Serializer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -18,10 +18,10 @@ import java.util.stream.Stream;
 public class PathStorage extends AbstractStorage<Path> {
 
     private final Path directory;
-    private final Strategy strategy;
+    private final Serializer serializer;
 
-    protected PathStorage(String dir, Strategy strategy) {
-        this.strategy = strategy;
+    protected PathStorage(String dir, Serializer serializer) {
+        this.serializer = serializer;
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
@@ -47,7 +47,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Path path, Resume resume) {
         try {
-            strategy.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
+            serializer.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("IO Error", path.getFileName().toString(), e);
         }
@@ -56,7 +56,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) throws StorageException {
         try {
-            return strategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
+            return serializer.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("IO Error", path.getFileName().toString(), e);
         }

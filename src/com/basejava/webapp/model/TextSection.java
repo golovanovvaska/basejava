@@ -1,16 +1,30 @@
 package com.basejava.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serial;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class TextSection extends Section {
     @Serial
     private final static long serialVersionUID = 1L;
 
-    private final String text;
+    private String text;
+
+    public TextSection() {
+    }
 
     public TextSection(String text) {
         this.text = text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getText() {
+        return text;
     }
 
     @Override
