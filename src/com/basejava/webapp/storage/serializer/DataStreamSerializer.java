@@ -23,7 +23,6 @@ public class DataStreamSerializer implements Serializer {
             writeCollection(resume.getSections().entrySet(), dos, entry -> {
                 Sections section = entry.getKey();
                 dos.writeUTF(section.name());
-                dos.writeUTF(entry.getKey().name());
                 switch (section) {
                     case OBJECTIVE:
                     case PERSONAL:
@@ -87,15 +86,15 @@ public class DataStreamSerializer implements Serializer {
                 switch (section) {
                     case OBJECTIVE:
                     case PERSONAL:
-                        resume.addSection(Sections.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
+                        resume.addSection(section, new TextSection(dis.readUTF()));
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        resume.addSection(Sections.valueOf(dis.readUTF()), readList(dis));
+                        resume.addSection(section, readList(dis));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        resume.addSection(Sections.valueOf(dis.readUTF()), readOrganization(dis));
+                        resume.addSection(section, readOrganization(dis));
                         break;
                 }
             });
