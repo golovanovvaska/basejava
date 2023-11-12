@@ -42,33 +42,6 @@ public class DataStreamSerializer implements Serializer {
         }
     }
 
-    private interface Writer<T> {
-        void write(T element) throws IOException;
-    }
-
-    private <T> void writeCollection(Collection<T> collection, DataOutputStream dos, Writer<T> writer) throws IOException {
-        dos.writeInt(collection.size());
-        for (T element : collection) {
-            writer.write(element);
-        }
-    }
-
-    private void writeOrganization(DataOutputStream dos, Map.Entry<Sections, Section> entry) throws IOException {
-        OrganizationSection organizationSection = (OrganizationSection) entry.getValue();
-        List<Organization> organizationList = organizationSection.getList();
-        writeCollection(organizationList, dos, organization -> {
-            dos.writeUTF(organization.getName());
-            dos.writeUTF(organization.getWebsite());
-            List<Period> periodList = organization.getPeriods();
-            writeCollection(periodList, dos, period -> {
-                dos.writeUTF(period.getTitle());
-                dos.writeUTF(period.getDescription());
-                dos.writeUTF(period.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
-                dos.writeUTF(period.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            });
-        });
-    }
-
     @Override
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
@@ -97,47 +70,67 @@ public class DataStreamSerializer implements Serializer {
         }
     }
 
-    private interface Reader {
-        void read() throws IOException;
+    private void writeOrganization(DataOutputStream dos, Map.Entry<Sections, Section> entry) throws IOException {
+        OrganizationSection organizationSection = (OrganizationSection) entry.getValue();
+        List<Organization> organizationList = organizationSection.getList();
+        writeCollection(organizationList, dos, organization -> {
+            dos.writeUTF(organization.getWebsite());
+            dos.writeUTF(organization.getName());
+            List<Period> periodList = organization.getPeriods();
+            writeCollection(periodList, dos, period -> {
+                dos.writeUTF(period.getTitle());
+                dos.writeUTF(period.getDescription());
+                dos.writeUTF(period.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
+                dos.writeUTF(period.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
+            });
+        });
     }
 
-    private void readCollection(DataInputStream dis, Reader reader) throws IOException {
+    private <T> void writeCollection(Collection<T> collection, DataOutputStream dos, Writer<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T element : collection) {
+            writer.write(element);
+        }
+    }
+
+    private OrganizationSection readOrganization(DataInputStream dis) throws IOException {
+        return new OrganizationSection(readAndFillList(dis, () ->
+                new Organization(dis.readUTF(), dis.readUTF(), readAndFillList(dis, () ->
+                        new Period(dis.readUTF(), dis.readUTF(), LocalDate.parse(dis.readUTF()),
+                                LocalDate.parse(dis.readUTF()))))));
+    }
+
+    private void readCollection(DataInputStream dis, VoidReader reader) throws IOException {
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
             reader.read();
         }
     }
 
-    private interface ListFiller<T> {
-        void fill(List<T> list) throws IOException;
-    }
-
-    private <T> List<T> createList(ListFiller<T> filler) throws IOException {
+    private <T> List<T> readAndFillList(DataInputStream dis, Reader<T> reader) throws IOException {
         List<T> list = new ArrayList<>();
-        filler.fill(list);
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            list.add(reader.read());
+        }
         return list;
     }
 
     private ListSection readList(DataInputStream dis) throws IOException {
-        return new ListSection(createList(text -> readCollection(dis, () -> text.add(dis.readUTF()))));
+        return new ListSection(readAndFillList(dis, dis::readUTF));
     }
 
-    private OrganizationSection readOrganization(DataInputStream dis) throws IOException {
-        return new OrganizationSection(createList(organizations -> readCollection(dis, () -> {
-            Organization organization = new Organization();
-            organization.setName(dis.readUTF());
-            organization.setWebsite(dis.readUTF());
-            List<Period> periods = new ArrayList<>();
-            readCollection(dis, () -> {
-                Period period = new Period();
-                period.setTitle(dis.readUTF());
-                period.setDescription(dis.readUTF());
-                period.setStartDate(LocalDate.parse(dis.readUTF()));
-                period.setEndDate(LocalDate.parse(dis.readUTF()));
-                periods.add(period);
-            });
-            organization.setPeriods(periods);
-            organizations.add(organization);
-        })));
+    private interface Writer<T> {
+        void write(T element) throws IOException;
+
     }
+
+    private interface Reader<T> {
+        T read() throws IOException;
+    }
+
+    private interface VoidReader {
+        void read() throws IOException;
+    }
+
 }
