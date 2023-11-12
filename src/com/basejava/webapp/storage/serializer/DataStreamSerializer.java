@@ -30,7 +30,7 @@ public class DataStreamSerializer implements Serializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        writeList(dos, entry);
+                        writeCollection(((ListSection) entry.getValue()).getList(), dos, dos::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
@@ -50,12 +50,6 @@ public class DataStreamSerializer implements Serializer {
         for (T element : collection) {
             writer.write(element);
         }
-    }
-
-    private void writeList(DataOutputStream dos, Map.Entry<Sections, Section> entry) throws IOException {
-        ListSection listSection = (ListSection) entry.getValue();
-        List<String> list = listSection.getList();
-        writeCollection(list, dos, dos::writeUTF);
     }
 
     private void writeOrganization(DataOutputStream dos, Map.Entry<Sections, Section> entry) throws IOException {
@@ -113,15 +107,22 @@ public class DataStreamSerializer implements Serializer {
         }
     }
 
+    private interface ListFiller<T> {
+        void fill(List<T> list) throws IOException;
+    }
+
+    private <T> List<T> createList(ListFiller<T> filler) throws IOException {
+        List<T> list = new ArrayList<>();
+        filler.fill(list);
+        return list;
+    }
+
     private ListSection readList(DataInputStream dis) throws IOException {
-        List<String> text = new ArrayList<>();
-        readCollection(dis, () -> text.add(dis.readUTF()));
-        return new ListSection(text);
+        return new ListSection(createList(text -> readCollection(dis, () -> text.add(dis.readUTF()))));
     }
 
     private OrganizationSection readOrganization(DataInputStream dis) throws IOException {
-        List<Organization> organizations = new ArrayList<>();
-        readCollection(dis, () -> {
+        return new OrganizationSection(createList(organizations -> readCollection(dis, () -> {
             Organization organization = new Organization();
             organization.setName(dis.readUTF());
             organization.setWebsite(dis.readUTF());
@@ -136,7 +137,6 @@ public class DataStreamSerializer implements Serializer {
             });
             organization.setPeriods(periods);
             organizations.add(organization);
-        });
-        return new OrganizationSection(organizations);
+        })));
     }
 }
