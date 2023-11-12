@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DataStreamSerializer implements Serializer {
+
     @Override
     public void doWrite(Resume resume, OutputStream os) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
