@@ -11,19 +11,23 @@ public class DeadLock {
 
     private static void deadLock(Object... lock) {
         new Thread(() -> {
-            System.out.println(Thread.currentThread().getName() + " waiting for LOCK1");
+            System.out.println(getName() + " waiting for LOCK1");
             synchronized (lock[0]) {
-                System.out.println(Thread.currentThread().getName() + " holding LOCK1");
+                System.out.println(getName() + " holding LOCK1");
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                System.out.println(Thread.currentThread().getName() + " waiting for LOCK2");
+                System.out.println(getName() + " waiting for LOCK2");
                 synchronized (lock[1]) {
-                    System.out.println(Thread.currentThread().getName() + " holding LOCK1 & LOCK2");
+                    System.out.println(getName() + " holding LOCK1 & LOCK2");
                 }
             }
         }).start();
+    }
+
+    private static String getName() {
+        return Thread.currentThread().getName();
     }
 }
