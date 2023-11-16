@@ -9,10 +9,10 @@ public class DeadLock {
         deadLock(LOCK2, LOCK1);
     }
 
-    private static void deadLock(Object... lock) {
+    private static void deadLock(Object lock1, Object lock2) {
         new Thread(() -> {
             System.out.println(getName() + " waiting for LOCK1");
-            synchronized (lock[0]) {
+            synchronized (lock1) {
                 System.out.println(getName() + " holding LOCK1");
                 try {
                     Thread.sleep(10);
@@ -20,7 +20,7 @@ public class DeadLock {
                     throw new RuntimeException(e);
                 }
                 System.out.println(getName() + " waiting for LOCK2");
-                synchronized (lock[1]) {
+                synchronized (lock2) {
                     System.out.println(getName() + " holding LOCK1 & LOCK2");
                 }
             }
