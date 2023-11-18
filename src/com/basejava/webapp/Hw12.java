@@ -2,6 +2,9 @@ package com.basejava.webapp;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.partitioningBy;
 
 public class Hw12 {
     public static void main(String[] args) {
@@ -20,15 +23,9 @@ public class Hw12 {
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
-        return integers.stream().
-                reduce(0, Integer::sum)%2==0 ?
-                    integers
-                            .stream()
-                            .filter(x -> x%2!=0)
-                            .toList() :
-                    integers
-                            .stream()
-                            .filter(x -> x%2==0)
-                            .toList();
+        Map<Boolean, List<Integer>> map = integers
+                .stream()
+                .collect(partitioningBy(x -> x % 2 == 0));
+        return map.get(map.get(false).size() % 2 != 0);
     }
 }
