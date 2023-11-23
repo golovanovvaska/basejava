@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,10 +22,10 @@ public abstract class AbstractStorageTest {
 
     private final Storage storage;
 
-    private final static String UUID_1 = "uuid1";
-    private final static String UUID_2 = "uuid2";
-    private final static String UUID_3 = "uuid3";
-    private final static String UUID_4 = "uuid4";
+    private final static String UUID_1 = UUID.randomUUID().toString();
+    private final static String UUID_2 = UUID.randomUUID().toString();
+    private final static String UUID_3 = UUID.randomUUID().toString();
+    private final static String UUID_4 = UUID.randomUUID().toString();
     private final static String NAME_1 = "name1";
     private final static String NAME_2 = "name2";
     private final static String NAME_3 = "name3";
@@ -80,7 +81,7 @@ public abstract class AbstractStorageTest {
         storage.delete(UUID_3);
         assertSize(2);
         NotExistStorageException exception = assertThrows(NotExistStorageException.class, () -> storage.get(UUID_3));
-        assertEquals("Резюме uuid3 нет в storage", exception.getMessage());
+        assertEquals("Резюме " + UUID_3 + " нет в storage", exception.getMessage());
     }
 
     @Test
@@ -126,7 +127,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void getNotExist() {
         NotExistStorageException exception = assertThrows(NotExistStorageException.class, () -> storage.get(UUID_4));
-        assertEquals("Резюме uuid4 нет в storage", exception.getMessage());
+        assertEquals("Резюме " + UUID_4 + " нет в storage", exception.getMessage());
     }
 
     @Test
@@ -135,19 +136,19 @@ public abstract class AbstractStorageTest {
             storage.delete(UUID_3);
             storage.get(UUID_3);
         });
-        assertEquals("Резюме uuid3 нет в storage", exception.getMessage());
+        assertEquals("Резюме " + UUID_3 + " нет в storage", exception.getMessage());
     }
 
     @Test
     public void updateNotExist() {
         NotExistStorageException exception = assertThrows(NotExistStorageException.class, () -> storage.update(RESUME_4));
-        assertEquals("Резюме uuid4 нет в storage", exception.getMessage());
+        assertEquals("Резюме " + UUID_4 + " нет в storage", exception.getMessage());
     }
 
     @Test
     public void saveExist() {
         ExistStorageException exception = assertThrows(ExistStorageException.class, () -> storage.save(RESUME_1));
-        assertEquals("Резюме uuid1 уже есть в storage", exception.getMessage());
+        assertEquals("Резюме " + UUID_1 + " уже есть в storage", exception.getMessage());
     }
 
     private void assertSize(int size) {
