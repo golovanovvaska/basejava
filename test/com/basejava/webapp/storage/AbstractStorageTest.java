@@ -1,5 +1,6 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.Config;
 import com.basejava.webapp.ResumeTestData;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
 
-    protected final static File STORAGE_DIR = new File("./src/com/basejava/webapp/storage/files");
+    protected final static File STORAGE_DIR = Config.getInstance().getStorageDir();
 
     private final Storage storage;
 
@@ -78,9 +79,7 @@ public abstract class AbstractStorageTest {
     public void delete() {
         storage.delete(UUID_3);
         assertSize(2);
-        NotExistStorageException exception = assertThrows(NotExistStorageException.class, () -> {
-            storage.get(UUID_3);
-        });
+        NotExistStorageException exception = assertThrows(NotExistStorageException.class, () -> storage.get(UUID_3));
         assertEquals("Резюме uuid3 нет в storage", exception.getMessage());
     }
 
@@ -126,9 +125,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getNotExist() {
-        NotExistStorageException exception = assertThrows(NotExistStorageException.class, () -> {
-            storage.get(UUID_4);
-        });
+        NotExistStorageException exception = assertThrows(NotExistStorageException.class, () -> storage.get(UUID_4));
         assertEquals("Резюме uuid4 нет в storage", exception.getMessage());
     }
 
@@ -143,17 +140,13 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void updateNotExist() {
-        NotExistStorageException exception = assertThrows(NotExistStorageException.class, () -> {
-            storage.update(RESUME_4);
-        });
+        NotExistStorageException exception = assertThrows(NotExistStorageException.class, () -> storage.update(RESUME_4));
         assertEquals("Резюме uuid4 нет в storage", exception.getMessage());
     }
 
     @Test
     public void saveExist() {
-        ExistStorageException exception = assertThrows(ExistStorageException.class, () -> {
-            storage.save(RESUME_1);
-        });
+        ExistStorageException exception = assertThrows(ExistStorageException.class, () -> storage.save(RESUME_1));
         assertEquals("Резюме uuid1 уже есть в storage", exception.getMessage());
     }
 
