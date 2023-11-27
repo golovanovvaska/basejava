@@ -47,9 +47,7 @@ public class SqlStorage implements Storage {
     public void update(Resume r) {
         sqlHelper.transactionalExecute(r, connection -> {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE resume " +
-                            "   SET full_name = ? " +
-                            " WHERE uuid= ?")) {
+                    "UPDATE resume SET full_name = ?  WHERE uuid= ?")) {
                 ps.setString(1, r.getFullName());
                 ps.setString(2, r.getUuid());
                 if (ps.executeUpdate() == 0) {
@@ -84,7 +82,11 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute(null, "SELECT * FROM resume r LEFT JOIN contact c ON r.uuid = c.resume_uuid ORDER BY full_name;", ps -> {
+        return sqlHelper.execute(null,
+                "   SELECT * FROM resume r " +
+                        "LEFT JOIN contact c " +
+                        "       ON r.uuid = c.resume_uuid " +
+                        " ORDER BY full_name;", ps -> {
             ResultSet rs = ps.executeQuery();
             List<Resume> resumes = new ArrayList<>();
             while (rs.next()) {
