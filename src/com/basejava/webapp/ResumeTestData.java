@@ -10,7 +10,7 @@ public class ResumeTestData {
 
     public static Resume createResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
-//        fillContacts(resume);
+        fillContacts(resume);
 //        fillSections(resume);
         return resume;
     }
