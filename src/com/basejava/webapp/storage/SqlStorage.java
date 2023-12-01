@@ -7,6 +7,7 @@ import com.basejava.webapp.sql.SqlHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,20 +88,20 @@ public class SqlStorage implements Storage {
                         "LEFT JOIN contact c " +
                         "       ON r.uuid = c.resume_uuid " +
                         " ORDER BY full_name;", ps -> {
-            ResultSet rs = ps.executeQuery();
-            List<Resume> resumes = new ArrayList<>();
-            while (rs.next()) {
-                String uuid = rs.getString("uuid");
-                String fullName = rs.getString("full_name");
-                Resume resume = findResume(resumes, uuid);
-                if (resume == null) {
-                    resume = new Resume(uuid, fullName);
-                    resumes.add(resume);
-                }
-                addContact(rs, resume);
-            }
-            return resumes;
-        });
+                    ResultSet rs = ps.executeQuery();
+                    Map<String, Resume> resumes = new LinkedHashMap<>();
+                    while (rs.next()) {
+                        String uuid = rs.getString("uuid");
+                        String fullName = rs.getString("full_name");
+                        Resume resume = resumes.get(uuid);
+                        if (resume == null) {
+                            resume = new Resume(uuid, fullName);
+                            resumes.put(uuid, resume);
+                        }
+                        addContact(rs, resume);
+                    }
+                    return new ArrayList<>(resumes.values());
+                });
     }
 
     @Override
@@ -111,19 +112,10 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private Resume findResume(List<Resume> resumes, String uuid) {
-        for (Resume r : resumes) {
-            if (r.getUuid().equals(uuid)) return r;
-        }
-        return null;
-    }
-
     private void deleteString(String uuid, String sql) {
         sqlHelper.execute(null, sql, ps -> {
             ps.setString(1, uuid);
-            if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(uuid);
-            }
+            ps.execute();
             return null;
         });
     }
@@ -142,8 +134,11 @@ public class SqlStorage implements Storage {
     }
 
     private void addContact(ResultSet rs, Resume resume) throws SQLException {
-        ContactType contactType = ContactType.valueOf(rs.getString("type"));
-        String value = rs.getString("value");
-        resume.addContact(contactType, value);
+        String type = rs.getString("type");
+        if (type != null) {
+            ContactType contactType = ContactType.valueOf(type);
+            String value = rs.getString("value");
+            resume.addContact(contactType, value);
+        }
     }
 }
