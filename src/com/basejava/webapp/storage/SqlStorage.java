@@ -18,6 +18,11 @@ public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
@@ -70,9 +75,9 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(r.getUuid());
                 }
             }
-            deleteString(r.getUuid(), "DELETE FROM contact WHERE resume_uuid = ?");
+            deleteString(connection, r.getUuid(), "DELETE FROM contact WHERE resume_uuid = ?");
             insertContacts(connection, r);
-            deleteString(r.getUuid(), "DELETE FROM section WHERE resume_uuid = ?");
+            deleteString(connection, r.getUuid(), "DELETE FROM section WHERE resume_uuid = ?");
             insertSections(connection, r);
             return null;
         });
@@ -96,7 +101,13 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        deleteString(uuid, "DELETE FROM resume WHERE uuid = ?");
+        sqlHelper.execute(null, "DELETE FROM resume WHERE uuid = ?", ps -> {
+            ps.setString(1, uuid);
+            if (ps.executeUpdate() == 0) {
+                throw new NotExistStorageException(uuid);
+            }
+            return null;
+        });
     }
 
     @Override
@@ -139,12 +150,11 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private void deleteString(String uuid, String sql) {
-        sqlHelper.execute(null, sql, ps -> {
+    private void deleteString(Connection connection, String uuid, String sql) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, uuid);
             ps.execute();
-            return null;
-        });
+        }
     }
 
     private void insertContacts(Connection connection, Resume resume) throws SQLException {
