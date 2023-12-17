@@ -103,24 +103,24 @@ public class ResumeTestData {
 
         organizationsList = new ArrayList<>();
         periods = new ArrayList<>();
-        period = new Period("", "3 месяца обучения мобильным IN сетям (Берлин)",
+        period = new Period("3 месяца обучения мобильным IN сетям (Берлин)", "",
                 LocalDate.of(2005, 1, 1), LocalDate.of(2005, 4, 1));
         periods.add(period);
         organization = new Organization("http://www.siemens.ru/", "Siemens AG", periods);
         organizationsList.add(organization);
 
         periods = new ArrayList<>();
-        period = new Period("", "6 месяцев обучения цифровым телефонным сетям (Москва)",
+        period = new Period("6 месяцев обучения цифровым телефонным сетям (Москва)", "",
                 LocalDate.of(1997, 9, 1), LocalDate.of(1998, 3, 1));
         periods.add(period);
         organization = new Organization("http://www.alcatel.ru/", "Alcatel", periods);
         organizationsList.add(organization);
 
         periods = new ArrayList<>();
-        period = new Period("", "Аспирантура (программист С, С++)",
+        period = new Period("Аспирантура (программист С, С++)", "",
                 LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1));
         periods.add(period);
-        period = new Period("", "Инженер (программист Fortran, C)",
+        period = new Period("Инженер (программист Fortran, C)", "",
                 LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1));
         periods.add(period);
         organization = new Organization("http://www.ifmo.ru/", "Санкт-Петербургский национальный" +

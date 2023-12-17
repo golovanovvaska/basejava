@@ -5,9 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -26,6 +24,14 @@ public class Resume implements Comparable<Resume>, Serializable {
     private final Map<Sections, Section> sections = new EnumMap<>(Sections.class);
 
     public Resume() {
+        this.addSection(Sections.OBJECTIVE, new TextSection(""));
+        this.addSection(Sections.PERSONAL, new TextSection(""));
+        this.addSection(Sections.ACHIEVEMENT, new ListSection(new ArrayList<>()));
+        this.addSection(Sections.QUALIFICATIONS, new ListSection(new ArrayList<>()));
+        this.addSection(Sections.EXPERIENCE, new OrganizationSection(Arrays.asList(new Organization("", ""
+                , Arrays.asList(new Period("", "", null, null))))));
+        this.addSection(Sections.EDUCATION, new OrganizationSection(Arrays.asList(new Organization("", ""
+                , Arrays.asList(new Period("", "", null, null))))));
     }
 
     public Resume(String fullName) {
@@ -60,6 +66,14 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     public void addSection(Sections sectionType, Section section) {
         sections.put(sectionType, section);
+    }
+
+    public String getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public Section getSection(Sections type) {
+        return sections.get(type);
     }
 
     public Map<ContactType, String> getContacts() {
