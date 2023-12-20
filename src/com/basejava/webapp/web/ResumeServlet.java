@@ -32,7 +32,7 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
         Resume r;
-        if (uuid == null || uuid.length() == 0) {
+        if (uuid == null || uuid.isEmpty()) {
             r = new Resume(fullName);
         } else {
             r = storage.get(uuid);
@@ -73,7 +73,7 @@ public class ResumeServlet extends HttpServlet {
 
             }
         }
-        if (uuid == null || uuid.length() == 0) {
+        if (uuid == null || uuid.isEmpty()) {
             storage.save(r);
         } else {
             storage.update(r);
@@ -124,11 +124,10 @@ public class ResumeServlet extends HttpServlet {
                             OrganizationSection organizationSection = (OrganizationSection) section;
                             List<Organization> emptyOrganizations = new ArrayList<>();
                             emptyOrganizations.add(new Organization("", ""
-                                    , Arrays.asList(new Period("", "", null, null))));
+                                    , List.of(new Period("", "", null, null))));
                             if (organizationSection != null) {
                                 for (Organization org : organizationSection.getList()) {
-                                    List<Period> emptyPeriods = new ArrayList<>();
-                                    emptyPeriods.addAll(org.getPeriods());
+                                    List<Period> emptyPeriods = new ArrayList<>(org.getPeriods());
                                     emptyOrganizations.add(new Organization(org.getWebsite(), org.getName(), emptyPeriods));
                                 }
                             }
