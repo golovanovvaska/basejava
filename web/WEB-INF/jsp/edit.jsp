@@ -18,7 +18,7 @@
         <div class="scrollable-panel">
             <div class="form-wrapper">
                 <div class="section">ФИО</div>
-                <input type="text" name="fullName" size=50 placeholder="ФИО" value="${resume.fullName}">
+                <input type="text" name="fullName" size=50 placeholder="ФИО" value="${resume.fullName}" pattern="^[^\s][a-zA-Zа-яА-Я\s]*$" required>
                 <div class="section">Контакты</div>
                 <c:forEach var="type" items="<%=ContactType.values()%>">
                     <input class="field" type="text" name="${type.name()}" size=30 placeholder="${type.contact}"

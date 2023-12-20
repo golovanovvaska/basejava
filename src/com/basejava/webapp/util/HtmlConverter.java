@@ -47,9 +47,11 @@ public class HtmlConverter {
                 case QUALIFICATIONS: {
                     StringBuilder sb = new StringBuilder();
                     ((ListSection) value).getList().forEach(text -> {
-                        sb.append("<li>");
-                        sb.append(text);
-                        sb.append("</li>");
+                        if (!text.isEmpty()) {
+                            sb.append("<li>");
+                            sb.append(text);
+                            sb.append("</li>");
+                        }
                     });
                     return "<ul class = \"list\">" + sb.toString() + "</ul>";
                 }
@@ -59,17 +61,17 @@ public class HtmlConverter {
                     for (Organization organization : ((OrganizationSection) value).getList()) {
                         sb.append("<div class = \"section-wrapper\">");
                         sb.append("<div class = \"job-name\">");
-                        sb.append("<a class = \"contact-link\" href = \"" + organization.getWebsite() + "\">"
-                                + organization.getName() + "</a>");
+                        sb.append("<a class = \"contact-link\" href = \"").append(organization.getWebsite()).append("\">")
+                                .append(organization.getName()).append("</a>");
                         sb.append("</div>");
                         for (Period period : organization.getPeriods()) {
                             sb.append("<div class = \"period-position\">");
-                            sb.append("<div class = \"period\">" + DateUtil.dateToString(period.getStartDate())
-                                    + "-" + DateUtil.dateToString(period.getStartDate()) + "</div>");
-                            sb.append("<div class = \"position\">" + period.getTitle() + "</div>");
+                            sb.append("<div class = \"period\">").append(DateUtil.dateToString(period.getStartDate()))
+                                    .append("-").append(DateUtil.dateToString(period.getStartDate())).append("</div>");
+                            sb.append("<div class = \"position\">").append(period.getTitle()).append("</div>");
                             sb.append("</div>");
-                            if (section.name() == "EXPERIENCE") {
-                                sb.append("<div class = \"description\">" + period.getDescription() + "</div>");
+                            if (section.name().equals("EXPERIENCE")) {
+                                sb.append("<div class = \"description\">").append(period.getDescription()).append("</div>");
                             }
                         }
                         sb.append("</div>");
@@ -97,26 +99,22 @@ public class HtmlConverter {
                     StringBuilder sb = new StringBuilder();
                     int counter = 0;
                     for (Organization organization : ((OrganizationSection) value).getList()) {
-                        sb.append("<input class=\"field\" type=\"text\" placeholder=\"Название\" name=\""
-                                + section + "Name\" size=\"100\" value=\"" + organization.getName()
-                                + "\">");
-                        sb.append("<input class=\"field\" type=\"text\" placeholder=\"Ссылка\" name=\""
-                                + section + "Link\" size=\"100\" value=\"" + organization.getWebsite()
-                                + "\">");
+                        sb.append("<input class=\"field\" type=\"text\" placeholder=\"Название\" name=\"").append(section)
+                                .append("Name\" size=\"100\" value=\"").append(organization.getName()).append("\">");
+                        sb.append("<input class=\"field\" type=\"text\" placeholder=\"Ссылка\" name=\"").append(section)
+                                .append("Link\" size=\"100\" value=\"").append(organization.getWebsite()).append("\">");
                         for (Period period : organization.getPeriods()) {
-                            sb.append("<div class = \'date-section\'>");
-                            sb.append("<input class=\"field date\" name=\"" + section + counter
-                                    + "StartDate\" placeholder=\"Начало, ММ/ГГГГ\" size=\"10\" value=\""
-                                    + DateUtil.dateToString(period.getStartDate()) + "\">");
-                            sb.append("<input class=\"field date date-margin\" name=\"" + section + counter
-                                    + "EndDate\" placeholder=\"Окончание, ММ/ГГГГ\" size=\"10\" value=\""
-                                    + DateUtil.dateToString(period.getEndDate()) + "\">");
+                            sb.append("<div class = 'date-section'>");
+                            sb.append("<input class=\"field date\" name=\"").append(section).append(counter)
+                                    .append("StartDate\" placeholder=\"Начало, ММ/ГГГГ\" size=\"10\" value=\"").append(DateUtil.dateToString(period.getStartDate())).append("\">");
+                            sb.append("<input class=\"field date date-margin\" name=\"").append(section).append(counter)
+                                    .append("EndDate\" placeholder=\"Окончание, ММ/ГГГГ\" size=\"10\" value=\"").append(DateUtil.dateToString(period.getEndDate())).append("\">");
                             sb.append("</div>");
-                            sb.append("<input class=\"field\" type=\"text\" placeholder=\"Заголовок\" name=\""
-                                    + section + counter + "Title\" size=\"75\" value=\"" + period.getTitle()
-                                    + "\">");
-                            sb.append("<textarea class=\"field\" placeholder=\"Описание\" name=\"" + section
-                                    + counter + "Description\">" + period.getDescription() + "</textarea>");
+                            sb.append("<input class=\"field\" type=\"text\" placeholder=\"Заголовок\" name=\"")
+                                    .append(section).append(counter).append("Title\" size=\"75\" value=\"")
+                                    .append(period.getTitle()).append("\">");
+                            sb.append("<textarea class=\"field\" placeholder=\"Описание\" name=\"").append(section)
+                                    .append(counter).append("Description\">").append(period.getDescription()).append("</textarea>");
                         }
                         sb.append("<div class=\"spacer\"></div>");
                         counter++;
