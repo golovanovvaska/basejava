@@ -28,10 +28,10 @@ public class Resume implements Comparable<Resume>, Serializable {
         this.addSection(Sections.PERSONAL, new TextSection(""));
         this.addSection(Sections.ACHIEVEMENT, new ListSection(new ArrayList<>()));
         this.addSection(Sections.QUALIFICATIONS, new ListSection(new ArrayList<>()));
-        this.addSection(Sections.EXPERIENCE, new OrganizationSection(Arrays.asList(new Organization("", ""
-                , Arrays.asList(new Period("", "", null, null))))));
-        this.addSection(Sections.EDUCATION, new OrganizationSection(Arrays.asList(new Organization("", ""
-                , Arrays.asList(new Period("", "", null, null))))));
+        this.addSection(Sections.EXPERIENCE, new OrganizationSection(List.of(new Organization("", ""
+                , List.of(new Period("", "", null, null))))));
+        this.addSection(Sections.EDUCATION, new OrganizationSection(List.of(new Organization("", ""
+                , List.of(new Period("", "", null, null))))));
     }
 
     public Resume(String fullName) {

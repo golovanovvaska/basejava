@@ -47,11 +47,10 @@ public class ResumeServlet extends HttpServlet {
             }
         }
         for (Sections section : Sections.values()) {
-            String value = request.getParameter(section.name()) != null ? request.getParameter(section.name()) :
-                    request.getParameter(section.name() + "Name");
-            if (check(value)) {
-                r.getSections().remove(section);
-            } else {
+            String value = request.getParameter(section.name());
+            String[] values = request.getParameterValues(section.name());
+            System.out.println(Arrays.toString(values));
+            if (values != null) {
                 switch (section) {
                     case OBJECTIVE:
                     case PERSONAL: {
@@ -70,7 +69,8 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     }
                 }
-
+            } else {
+                r.getSections().remove(section);
             }
         }
         if (uuid == null || uuid.isEmpty()) {
@@ -127,8 +127,7 @@ public class ResumeServlet extends HttpServlet {
                                     , List.of(new Period("", "", null, null))));
                             if (organizationSection != null) {
                                 for (Organization org : organizationSection.getList()) {
-                                    List<Period> emptyPeriods = new ArrayList<>(org.getPeriods());
-                                    emptyOrganizations.add(new Organization(org.getWebsite(), org.getName(), emptyPeriods));
+                                    emptyOrganizations.add(new Organization(org.getWebsite(), org.getName(), new ArrayList<>(org.getPeriods())));
                                 }
                             }
                             section = new OrganizationSection(emptyOrganizations);
@@ -149,7 +148,7 @@ public class ResumeServlet extends HttpServlet {
 
     private OrganizationSection addOrganizationSection(HttpServletRequest request, Sections section) {
         List<Organization> organizations = new ArrayList<>();
-        String[] organizationNames = request.getParameterValues(section.name() + "Name");
+        String[] organizationNames = request.getParameterValues(section.name());
         String[] organizationLink = request.getParameterValues(section.name() + "Link");
         for (int i = 0; i < organizationNames.length; i++) {
             if (!organizationNames[i].isEmpty()) {
