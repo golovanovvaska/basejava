@@ -175,7 +175,11 @@ public class ResumeServlet extends HttpServlet {
     }
 
     private LocalDate localDateParser(String date) {
-        return YearMonth.parse(date, DateTimeFormatter.ofPattern("MM/yyyy")).atDay(1);
+        if(date.equals("Сейчас")){
+            return LocalDate.of(3000, 1, 1);
+        } else {
+            return YearMonth.parse(date, DateTimeFormatter.ofPattern("MM/yyyy")).atDay(1);
+        }
     }
 
     private boolean check(String str) {

@@ -9,6 +9,6 @@ public class DateUtil {
 
     public static String dateToString(LocalDate date) {
         if (date == null) return "";
-        return date == NOW ? "Сейчас" : date.format(DateTimeFormatter.ofPattern("MM/yyyy"));
+        return date.equals(NOW) ? "Сейчас" : date.format(DateTimeFormatter.ofPattern("MM/yyyy"));
     }
 }

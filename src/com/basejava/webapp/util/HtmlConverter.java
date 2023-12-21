@@ -65,7 +65,7 @@ public class HtmlConverter {
                         sb.append("</div>");
                         for (Period period : organization.getPeriods()) {
                             sb.append("<div class = \"period-position\">");
-                            sb.append("<div class = \"period\">").append(DateUtil.dateToString(period.getStartDate())).append("-").append(DateUtil.dateToString(period.getStartDate())).append("</div>");
+                            sb.append("<div class = \"period\">").append(DateUtil.dateToString(period.getStartDate())).append("-").append(DateUtil.dateToString(period.getEndDate())).append("</div>");
                             sb.append("<div class = \"position\">").append(period.getTitle()).append("</div>");
                             sb.append("</div>");
                             if (section.name().equals("EXPERIENCE")) {
