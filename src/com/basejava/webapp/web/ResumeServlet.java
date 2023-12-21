@@ -49,7 +49,6 @@ public class ResumeServlet extends HttpServlet {
         for (Sections section : Sections.values()) {
             String value = request.getParameter(section.name());
             String[] values = request.getParameterValues(section.name());
-            System.out.println(Arrays.toString(values));
             if (values != null) {
                 switch (section) {
                     case OBJECTIVE:
