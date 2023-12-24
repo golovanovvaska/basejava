@@ -19,6 +19,7 @@
     <div class="form-wrapper">
         <h2 class="full-name">${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit">
             <img class="pencil" src="img/edit.png"></a></h2>
+        <c:if test="<%=!resume.getContacts().isEmpty()%>">
         <ul class="contacts">
             <c:forEach var="contactEntry" items="${resume.contacts}">
                 <jsp:useBean id="contactEntry"
@@ -26,6 +27,7 @@
                 <%=HtmlConverter.contactsToHtml(contactEntry.getKey(), contactEntry.getValue())%>
             </c:forEach>
         </ul>
+        </c:if>
         <div class="spacer"></div>
         <c:forEach var="sectionEntry" items="${resume.sections}">
             <jsp:useBean id="sectionEntry" type="java.util.Map.Entry<com.basejava.webapp.model.Sections
