@@ -47,11 +47,9 @@ public class HtmlConverter {
                 case QUALIFICATIONS: {
                     StringBuilder sb = new StringBuilder();
                     ((ListSection) value).getList().forEach(text -> {
-                        if (!text.isEmpty()) {
                             sb.append("<li>");
                             sb.append(text);
                             sb.append("</li>");
-                        }
                     });
                     return "<ul class = \"list\">" + sb + "</ul>";
                 }

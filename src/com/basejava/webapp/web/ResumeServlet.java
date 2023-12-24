@@ -49,7 +49,7 @@ public class ResumeServlet extends HttpServlet {
         for (Sections section : Sections.values()) {
             String value = request.getParameter(section.name());
             String[] values = request.getParameterValues(section.name());
-            if (values != null) {
+            if (check(value) && values.length < 2) {
                 switch (section) {
                     case OBJECTIVE:
                     case PERSONAL: {
@@ -58,7 +58,8 @@ public class ResumeServlet extends HttpServlet {
                     }
                     case ACHIEVEMENT:
                     case QUALIFICATIONS: {
-                        r.addSection(section, new ListSection(Arrays.asList(value.split("\\r\\n"))));
+                        ListSection listSection = new ListSection(Arrays.asList(value.split("\\r\\n")));
+                        r.addSection(section, listSection);
                         break;
                     }
                     case EXPERIENCE:
@@ -148,7 +149,7 @@ public class ResumeServlet extends HttpServlet {
     private OrganizationSection addOrganizationSection(HttpServletRequest request, Sections section) {
         List<Organization> organizations = new ArrayList<>();
         String[] organizationNames = request.getParameterValues(section.name());
-        String[] organizationLink = request.getParameterValues(section.name() + "Link");
+        String[] organizationLinks = request.getParameterValues(section.name() + "Link");
         for (int i = 0; i < organizationNames.length; i++) {
             if (!organizationNames[i].isEmpty()) {
                 String[] titles = request.getParameterValues(section.name() + i + "Title");
@@ -156,7 +157,7 @@ public class ResumeServlet extends HttpServlet {
                 String[] startDates = request.getParameterValues(section.name() + i + "StartDate");
                 String[] endDates = request.getParameterValues(section.name() + i + "EndDate");
                 List<Period> periods = addPeriods(titles, descriptions, startDates, endDates);
-                organizations.add(new Organization(organizationLink[i], organizationNames[i], periods));
+                organizations.add(new Organization(organizationLinks[i], organizationNames[i], periods));
             }
         }
         return new OrganizationSection(organizations);
@@ -175,7 +176,7 @@ public class ResumeServlet extends HttpServlet {
     }
 
     private LocalDate localDateParser(String date) {
-        if(date.equals("Сейчас")){
+        if (date.equals("Сейчас")) {
             return LocalDate.of(3000, 1, 1);
         } else {
             return YearMonth.parse(date, DateTimeFormatter.ofPattern("MM/yyyy")).atDay(1);
