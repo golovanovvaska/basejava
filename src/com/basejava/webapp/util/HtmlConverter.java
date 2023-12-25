@@ -47,9 +47,9 @@ public class HtmlConverter {
                 case QUALIFICATIONS: {
                     StringBuilder sb = new StringBuilder();
                     ((ListSection) value).getList().forEach(text -> {
-                            sb.append("<li>");
-                            sb.append(text);
-                            sb.append("</li>");
+                        sb.append("<li>");
+                        sb.append(text);
+                        sb.append("</li>");
                     });
                     return "<ul class = \"list\">" + sb + "</ul>";
                 }
@@ -59,11 +59,17 @@ public class HtmlConverter {
                     for (Organization organization : ((OrganizationSection) value).getList()) {
                         sb.append("<div class = \"section-wrapper\">");
                         sb.append("<div class = \"job-name\">");
-                        sb.append("<a class = \"contact-link\" href = \"").append(organization.getWebsite()).append("\">").append(organization.getName()).append("</a>");
+                        if (organization.getWebsite().isEmpty()) {
+                            sb.append(organization.getName());
+                        } else {
+                            sb.append("<a class = \"contact-link\" href = \"").append(organization.getWebsite())
+                                    .append("\">").append(organization.getName()).append("</a>");
+                        }
                         sb.append("</div>");
                         for (Period period : organization.getPeriods()) {
                             sb.append("<div class = \"period-position\">");
-                            sb.append("<div class = \"period\">").append(DateUtil.dateToString(period.getStartDate())).append("-").append(DateUtil.dateToString(period.getEndDate())).append("</div>");
+                            sb.append("<div class = \"period\">").append(DateUtil.dateToString(period.getStartDate()))
+                                    .append("-").append(DateUtil.dateToString(period.getEndDate())).append("</div>");
                             sb.append("<div class = \"position\">").append(period.getTitle()).append("</div>");
                             sb.append("</div>");
                             if (section.name().equals("EXPERIENCE")) {
@@ -103,7 +109,7 @@ public class HtmlConverter {
                             sb.append("<input class=\"field date date-margin\" name=\"").append(section).append(counter).append("EndDate\" placeholder=\"Окончание, ММ/ГГГГ\" size=\"10\" value=\"").append(DateUtil.dateToString(period.getEndDate())).append("\">");
                             sb.append("</div>");
                             sb.append("<input class=\"field\" type=\"text\" placeholder=\"Заголовок\" name=\"").append(section).append(counter).append("Title\" size=\"75\" value=\"").append(period.getTitle()).append("\">");
-                                sb.append("<textarea class=\"field\" placeholder=\"Описание\" name=\"").append(section).append(counter).append("Description\">").append(period.getDescription()).append("</textarea>");
+                            sb.append("<textarea class=\"field\" placeholder=\"Описание\" name=\"").append(section).append(counter).append("Description\">").append(period.getDescription()).append("</textarea>");
                         }
                         sb.append("<div class=\"spacer\"></div>");
                         counter++;

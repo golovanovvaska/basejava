@@ -49,7 +49,9 @@ public class ResumeServlet extends HttpServlet {
         for (Sections section : Sections.values()) {
             String value = request.getParameter(section.name());
             String[] values = request.getParameterValues(section.name());
-            if (check(value) && values.length < 2) {
+            if (!check(value) && values.length < 2) {
+                r.getSections().remove(section);
+            } else {
                 switch (section) {
                     case OBJECTIVE:
                     case PERSONAL: {
@@ -58,7 +60,7 @@ public class ResumeServlet extends HttpServlet {
                     }
                     case ACHIEVEMENT:
                     case QUALIFICATIONS: {
-                        ListSection listSection = new ListSection(Arrays.asList(value.split("\\r\\n")));
+                        ListSection listSection = new ListSection(Arrays.asList(value.split("\\r\\n\\s*")));
                         r.addSection(section, listSection);
                         break;
                     }
@@ -69,8 +71,6 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     }
                 }
-            } else {
-                r.getSections().remove(section);
             }
         }
         if (uuid == null || uuid.isEmpty()) {
